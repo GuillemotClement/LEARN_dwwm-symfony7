@@ -1,42 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Article index{% endblock %}
+{% block title %}Article{% endblock %}
 
 {% block body %}
-    <ul>
-        <li><a href="/">Accueil</a></li>
-    </ul>
-    <h1>Article index</h1>
+    <div class="m-auto w90 my-4">
+        <h1 class="text-center text-uppercase">Liste Article</h1>
+        <div class="">
+            <a class="btn btn-primary shadow text-uppercase m-3" href="{{ path('app_article_new') }}"><i class="bi bi-plus-square me-3"></i>Nouveau</a>
+            <a href="javascript:writeExcel()" class="btn btn-success shadow text-uppercase"><i class="bi bi-file-earmark-excel me-3"></i>Excel</a>
+        </div>
+        
+        <table class="table border rounded">
+            <thead class="">
+                <tr class="">
+                    <th class="border text-uppercase text-center">Id</th>
+                    <th class="border text-uppercase text-center">NumArticle</th>
+                    <th class="border text-uppercase text-center">Designation</th>
+                    <th class="border text-uppercase text-center">PrixUnitaire</th>
+                    <th class="border text-uppercase text-center">actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for article in articles %}
+                <tr>
+                    <td class="border">{{ article.id }}</td>
+                    <td class="border text-center">{{ article.numArticle }}</td>
+                    <td class="border text-center">{{ article.designation }}</td>
+                    <td class="border text-end">{{ article.prixUnitaire }}</td>
+                    <td class="border text-center">
+                        <a class="btn btn-success shadow text-uppercase" href="{{ path('app_article_show', {'id': article.id}) }}"><i class="bi bi-eyeglasses me-3"></i>Afficher</a>
+                        <a class="btn btn-warning shadow text-uppercase" href="{{ path('app_article_edit', {'id': article.id}) }}"><i class="bi bi-screwdriver me-3"></i>Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucune données enregistrées.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    <table class="table border">
-        <thead>
-            <tr class="">
-                <th>Id</th>
-                <th>NumArticle</th>
-                <th>Designation</th>
-                <th>PrixUnitaire</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for article in articles %}
-            <tr>
-                <td>{{ article.id }}</td>
-                <td>{{ article.numArticle }}</td>
-                <td>{{ article.designation }}</td>
-                <td>{{ article.prixUnitaire }}</td>
-                <td>
-                    <a href="{{ path('app_article_show', {'id': article.id}) }}">show</a>
-                    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_article_new') }}">Create new</a>
+        
+    </div>
 {% endblock %}
