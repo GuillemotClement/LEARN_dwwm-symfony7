@@ -26,7 +26,7 @@
         <tbody id="tbody_client">
             {% for client in clients %}
             <tr>
-                <td class="border"><input type="checkbox" id="{{client.id}}" value="{{client.id}}" name="checked" onclick="onlyOne(this)"></td>
+                <td class="border"><input type="checkbox" id="{{client.id}}" value="{{client.id}}" name="check" onclick="onlyOne(this)"></td>
                 <td class="border">{{client.id}}</td>
                 <td class="border">{{client.getNumClient()}}</td>
                 <td class="border">{{client.nomClient}}</td>
@@ -45,10 +45,34 @@
 {% endblock %}
 {% block script %}
     <script>
+        const url_edit = "/client/edit/id";
+        const url_delete = "/client/delete/id";
+        function supprimer(){
+            const id = getIdChecked('check');
+            if(id == 0){
+                alert('Erreur, aucune ligne sélectionnée');
+            }
+            const response = confirm("Confirmer la suppression");
+            if(response){
+                const url = url_delete.replace('id', id);
+                document.location.href = url;
+            }
+            
+        }
         function modifier(){
             const id = getIdChecked('checked');
+            if(id == 0){
+                alert('Erreur, aucune ligne sélectionnée');
+            }
             //permet de tester le script
-            alert(id);
+           // alert(id);
+           //on vient modifier l'url par la valeur id de l'élément
+            const url = url_edit.replace('id', id);
+            document.location.href = url;
+        }
+        function creer(){
+            const url = url_edit.replace('id', 0);
+            document.location.href = url;
         }
     </script>
 {% endblock %}

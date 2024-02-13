@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+{% block title %}Client{% endblock %}
+{% block body %}
+    <div class="container">
+        <h1 class="text-center text-uppercase">Saisie Client</h1>
+        {{form_start(form)}}
+        {{form_widget(form)}}
+        <div class="div-btn">
+            <a href="/client" class="btn btn-success shadow">Retour liste</a>
+            <input type="submit" class="btn btn-primary shadow" value="Enregistrer">
+        </div>
+        {{form_end(form)}}
+    </div>
+{% endblock %}
