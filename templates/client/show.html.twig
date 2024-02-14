@@ -31,7 +31,17 @@
 {% block script %}
 <script>
     function retour(){
-        document.location.href = "/client";
+        // document.location.href = "/client";
+        document.location.href = "{{path('app_client')}}";
+    }
+
+    function supprimer(){
+        const response = confirm('Confirmer la supression');
+        if(response){
+            const id = "{{client.id}}";
+            const url = "{{path('app_client_delete', {'id' : id})}}"; //equivaut à url="/client/delete/"+id;
+            document.location.href = url;  
+        }
     }
 </script>
 {% endblock %}

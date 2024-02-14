@@ -47,7 +47,9 @@
     <script>
         const url_edit = "/client/edit/id";
         const url_delete = "/client/delete/id";
-        const url_show = "/client/show/id";
+        {# const url_show = "/client/show/id"; #}
+        //best 
+        const url_show = "{{path('app_client_show',{'id': 'id'})}}"
         function afficher(){
             const id = getIdChecked('check');
             if(id == 0){
