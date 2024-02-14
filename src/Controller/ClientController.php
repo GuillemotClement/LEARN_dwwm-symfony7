@@ -13,9 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[Route('/client')]
 class ClientController extends AbstractController
 {
-    #[Route('/client', name: 'app_client')]
+    #[Route('/', name: 'app_client')]
     //ClientRepository est la classe qui est importé
     public function index(ClientRepository $cr): Response
     {
@@ -23,13 +24,22 @@ class ClientController extends AbstractController
         $clients = $cr->findAll();
         
         //chercher les clients
-        return $this->render('client/index.html.twig', [
+        return $this->render('/client/index.html.twig', [
             'clients'=>$clients,
             'nbre'=>count($clients),
         ]);
     }
 
-    #[Route('/client/delete/{id}', name: 'app_client_delete')]
+    #[Route('/show/{id}', name: "app_client_show")]
+    public function show(ClientRepository $cr, $id){
+        $client = $cr->find($id);
+        return $this->render("client/show.html.twig", [
+            'client'=>$client,
+        ]);
+
+    }
+
+    #[Route('/delete/{id}', name: 'app_client_delete')]
     public function delete(EntityManagerInterface $em, $id){
         $client = $em->getRepository(Client::class)->find($id);
         $em->remove($client);
@@ -38,7 +48,7 @@ class ClientController extends AbstractController
     }
     //création d'une route pour la fonction
     //chemin qui correspond à l'élément à modifier
-    #[Route('/client/edit/{id}', name:"app_client_edit", methods:["POST", "GET"])]
+    #[Route('/edit/{id}', name:"app_client_edit", methods:["POST", "GET"])]
     public function edit(EntityManagerInterface $em, ClientRepository $cr, $id, Request $request){
         $id = (int)$id;
         if($id){

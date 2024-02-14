@@ -4,9 +4,9 @@
 
 {% block body %}
 
-<div class="">
+<div class="container">
     <h1 class="text-center text-uppercase">Liste Clients</h1>
-    <div class="div-btn">
+    <div class="d-flex justify-content-around my-3">
         <a href="javascript:creer()" class="btn btn-primary shadow text-light text-uppercase"><i class="bi bi-plus-square me-3"></i>Nouveau</a>    
         <a href="javascript:afficher()" class="btn btn-secondary shadow text-light text-uppercase"><i class="bi bi-eye me-3"></i>Afficher</a>    
         <a href="javascript:modifier()" class="btn btn-warning shadow text-light text-uppercase"><i class="bi bi-wrench-adjustable-circle me-3"></i>Modifier</a>    
@@ -47,6 +47,15 @@
     <script>
         const url_edit = "/client/edit/id";
         const url_delete = "/client/delete/id";
+        const url_show = "/client/show/id";
+        function afficher(){
+            const id = getIdChecked('check');
+            if(id == 0){
+                alert('Selectionner une ligne');
+            }
+            const url = url_show.replace('id', id);
+            document.location.href = url;
+        }
         function supprimer(){
             const id = getIdChecked('check');
             if(id == 0){
@@ -60,7 +69,7 @@
             
         }
         function modifier(){
-            const id = getIdChecked('checked');
+            const id = getIdChecked('check');
             if(id == 0){
                 alert('Erreur, aucune ligne sélectionnée');
             }
@@ -74,5 +83,6 @@
             const url = url_edit.replace('id', 0);
             document.location.href = url;
         }
+        
     </script>
 {% endblock %}
