@@ -39,7 +39,7 @@
         const response = confirm('Confirmer la supression');
         if(response){
             const id = "{{client.id}}";
-            const url = "{{path('app_client_delete', {'id' : id})}}"; //equivaut à url="/client/delete/"+id;
+            const url = "{{path('app_client_delete', {'id' : client.id})}}"; 
             document.location.href = url;  
         }
     }
