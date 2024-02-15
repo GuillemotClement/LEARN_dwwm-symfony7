@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Entity;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -28,6 +30,31 @@ class ClientController extends AbstractController
             'clients'=>$clients,
             'nbre'=>count($clients),
         ]);
+    }
+
+    #[Route('/export/excel', name: 'app_client_export_excel')]
+    public function exportExcel(EntityManagerInterface $em):Response{
+        $file = "../public/modele-document/modele-fichier-client.xlsx";
+        $spreadsheet = IOFactory::load($file);
+        $sheet = $spreadsheet->getActiveSheet();
+        $clients = $em->getRepository(Client::class)->findAll();
+        $row = 4;
+        foreach($clients as $client){
+            $sheet->insertNewRowBefore($row);
+            $sheet->setCellValue("A$row", $client->getNumClient());
+            $sheet->setCellValue("B$row", $client->getNomClient());
+            $sheet->setCellValue("C$row", $client->getAdresseClient());
+            $row++;
+        }
+        
+        $nbre = count($clients);
+        $sheet->setCellValue("A$row", "Nombre de clients : $nbre");
+        $target = "../public/share/list-clients.xlsx";
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($target);
+        echo "Exportation réaliser";
+        exit;
+        //return $this->redirectToRoute('app_client');
     }
 
     #[Route('/show/{id}', name: "app_client_show")]

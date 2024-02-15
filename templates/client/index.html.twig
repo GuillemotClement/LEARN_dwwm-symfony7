@@ -11,8 +11,9 @@
         <a href="javascript:afficher()" class="btn btn-secondary shadow text-light text-uppercase"><i class="bi bi-eye me-3"></i>Afficher</a>    
         <a href="javascript:modifier()" class="btn btn-warning shadow text-light text-uppercase"><i class="bi bi-wrench-adjustable-circle me-3"></i>Modifier</a>    
         <a href="javascript:supprimer()" class="btn btn-danger shadow text-light text-uppercase"><i class="bi bi-plus-square me-3"></i>Supprimer</a>    
-        <a href="javascript:excel()" class="btn btn-success shadow text-light text-uppercase"><i class="bi bi-file-earmark-excel me-3"></i>Excel</a>    
+        <a href="javascript:writeExcel()" class="btn btn-success shadow text-light text-uppercase"><i class="bi bi-file-earmark-excel me-3"></i>Excel</a>    
     </div>
+    <a id="excel" hidden href="{{asset('share/list-clients.xlsx')}}" download >Exporter</a>
     <table class="container m-2">
         <thead id="thead_client">
             <tr>
@@ -49,7 +50,21 @@
         const url_delete = "/client/delete/id";
         {# const url_show = "/client/show/id"; #}
         //best 
-        const url_show = "{{path('app_client_show',{'id': 'id'})}}"
+        const url_show = "{{path('app_client_show',{'id': 'id'})}}";
+
+        const url_export_excel = "{{path('app_client_export_excel')}}";
+
+        function writeExcel(){
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", url_export_excel);
+            xhr.send();
+            xhr.onload = function(){
+                const response = xhr.responseText;
+                alert(response);
+                excel.click();
+            }
+        }
+
         function afficher(){
             const id = getIdChecked('check');
             if(id == 0){
