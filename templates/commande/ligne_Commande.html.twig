@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ligne Commande{% endblock %}
+
+{% block body %}
+<main class="container">
+    <h1 class="text-uppercase text-center">saisie ligne de commande</h1>
+    <div class="row">
+        <div class="col">
+            <div>
+                <label class="text-uppercase ">numero commande</label>
+                <input type="text" class="form-control w60 mb-3" value="{{commande.numCommande}}" disabled>
+            </div>
+            <div>
+                <label class="text-uppercase ">date commande</label>
+                <input type="text" class="form-control w60 mb-3" value="{{commande.dateCommande|date('d/m/Y')}}" disabled>
+            </div>
+            <div>
+                <label class="text-uppercase ">client</label>
+                <input type="text" class="form-control w60 mb-3" value="{{commande.client.nomClient}}" disabled>
+            </div>
+        </div>
+        <div class="col">
+            <p id="total" class="border-radius">Prix : {{total~" $"}}</p>
+        </div>
+    </div>
+    <table class="">
+        <thead>
+            <tr>
+                <th class="border text-uppercase text-center">code</th>
+                <th class="border text-uppercase text-center">designation</th>
+                <th class="border text-uppercase text-center">prix unitaire</th>
+                <th class="border text-uppercase text-center">quantite</th>
+                <th class="border text-uppercase text-center">montant</th>
+            </tr>
+            <tr>
+                <th class="border text-center"><input onkeydown="searchCode(event)" type="text" name="numArticle" id="numArticle" value="" class="form-control"></th>
+                <th class="border text-center" id="designation"></th>
+                <th class="border text-center" id="prixUnitaire"></th>
+                <th class="border text-center"><input type="text" id="quantite" value="" class="form-control"></th>
+                <th id="submit"><button class="btn btn-primary">Valider</button></th>
+            </tr>
+        </thead>
+        <tbody id="tbody_row">
+            {%for row in rows%}
+            <tr>
+                <td class="border">{{row.numArticle}}</td>
+                <td class="border">{{row.designation}}</td>
+                <td class="border">{{row.prixUnitaire}}</td>
+                <td class="border">{{row.quantite}}</td>
+                <td class="border">{{row.montant}}</td>
+            </tr>
+            {%endfor%}
+        </tbody>
+        <tfoot>
+            <th class="center fw-bold">Total : </th>
+            <th class="right fw-bold">{{total}}</th>
+        </tfoot>
+    </table>
+</main>
+{% endblock %}
+
+{% block script %}
+<script>
+    function searchCode(event){
+        const url_search_code = "{{path('app_commande_search_code')}}";
+        if(event.keyCode == 13){
+            
+            let xhr =new XMLHttpRequest();
+            xhr.open("POST", url_search_code);
+            let data = new FormData();
+            data.append('numArticle', numArticle.value);
+            xhr.send(data);
+            xhr.onload = () => {
+                const reponse = xhr.responseText;
+                alert(reponse);
+            }
+        }
+    }
+</script>
+{% endblock %}

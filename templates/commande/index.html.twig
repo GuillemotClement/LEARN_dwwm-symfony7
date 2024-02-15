@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande index{% endblock %}
+
+{% block body %}
+<main class="container">
+    <h1>Commande index</h1>
+    <div class="print-none d-flex justify-content-around">
+        <a class="btn btn-primary shadow text-uppercase" href="{{ path('app_commande_new') }}">Créer</a>
+        <a class="btn btn-success shadow text-uppercase" href="javascript:window.print()">Imprimer</a>
+        <a class="btn btn-success shadow text-uppercase" href="javascript:void()">Excel</a>
+    </div>
+    
+    <table class="table my-3">
+        <thead>
+            <tr>
+                <th class="border text-uppercase text-center">Id</th>
+                <th class="border text-uppercase text-center">numéro commande</th>
+                <th class="border text-uppercase text-center">date commande</th>
+                <th class="border text-uppercase text-center">actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for commande in commandes %}
+            <tr>
+                <td class="border text-uppercase text-center">{{ commande.id }}</td>
+                <td class="border text-uppercase text-center">{{ commande.numCommande }}</td>
+                <td class="border text-uppercase text-center">{{ commande.dateCommande ? commande.dateCommande|date('Y-m-d') : '' }}</td>
+                <td class="border text-uppercase text-center">
+                    <a class="btn btn-primary shadow text-uppercase text-lignt" href="{{ path('app_commande_show', {'id': commande.id}) }}">Afficher</a>
+                    <a class="btn btn-success shadow text-uppercase text-lignt" href="{{ path('app_commande_content', {'id': commande.id}) }}">Contenu</a>
+                    <a class="btn btn-warning shadow text-uppercase text-lignt" href="{{ path('app_commande_edit', {'id': commande.id}) }}">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</main>
+{% endblock %}
