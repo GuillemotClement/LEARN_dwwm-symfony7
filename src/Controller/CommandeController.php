@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
 use App\Entity\Commande;
+use App\Entity\LigneCommande;
 use App\Form\CommandeType;
+use Doctrine\ORM\EntityManager;
 use App\Repository\CommandeRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/commande')]
 class CommandeController extends AbstractController
@@ -22,11 +25,67 @@ class CommandeController extends AbstractController
         ]);
     }
 
+
+    #[Route('/ligne_commande/submit', name: 'app_commande_submit', methods:['POST'])]
+    public function submitLigneCommande(Request $request, EntityManagerInterface $em)
+    {
+        $numArticle = $request->get('numArticle');
+        $quantite = $request->get('quantite');
+        $quantite = (!$quantite)?1:$quantite;
+        $commande_id = $request->get('commande_id');
+        $commande = $em->getRepository(Commande::class)->find($commande_id);
+        $article = $em->getRepository(Article::class)->findOneBy(['numArticle'=>$numArticle]);
+        $ligneCommande = new LigneCommande();
+        $ligneCommande->setCommande($commande);
+        $ligneCommande->setArticle($article);
+        $ligneCommande->setQuantite($quantite);
+        $ligneCommande->setPrixUnitaire($article->getPrixUnitaire());
+        $em->persist($ligneCommande);
+        $em->flush();
+        $rows = [];
+        $total = 0;
+        $ligneCommandes =  $commande->getLigneCommandes();
+        foreach($ligneCommandes as $ligne){
+            $article = $ligne->getArticle();
+            $prixUnitaire = $ligne->getPrixUnitaire();
+            $quantite = $ligne->getQuantite();
+            $montant = $quantite * $prixUnitaire;
+            $total += $montant;
+            $rows[] = [
+                'numArticle'=>$article->getNumArticle(),
+                'designation'=>$article->getDesignation(),
+                'quantite'=>$quantite,
+                'montant'=>$montant,
+                'prixUnitaire'=>$prixUnitaire,
+            ];
+        }
+        $response = [
+            'rows'=>$rows,
+            'total'=>$total,
+        ];
+        echo json_encode($response);
+        exit;
+    }
+
     #[Route('/ligne_commande/search', name: "app_commande_search_code", methods:['POST'])]
-    public function searchCode(Request $request)
+    public function searchCode(Request $request, EntityManagerInterface $em)
     {
         $numArticle = $request->get('numArticle'); //$numArticle = $_POST['numArticle']
-        echo "Que souhaitez vous faire de $numArticle ?";
+        //on vient chercher un article en utilisant la fonction findOneBy
+        //findOneBy = on cherche un seul element By : la recherche s'applique au tableau indiqué
+        //--Cherche article via numArticle qui a comme valeur $numArticle
+        $article = $em->getRepository(Article::class)->findOneBy(['numArticle'=>$numArticle]);
+        if($article){
+            $response = [
+                'id'=>$article->getId(),
+                'numArticle'=>$article->getNumArticle(),
+                'designation'=>$article->getDesignation(),
+                'prixUnitaire'=>$article->getPrixUnitaire(),
+            ];
+        }else{
+            $response = [];
+        }
+        echo json_encode($response);
         exit;
     }
 
