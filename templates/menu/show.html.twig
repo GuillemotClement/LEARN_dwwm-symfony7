@@ -1,0 +1,52 @@
+{% extends "base.html.twig" %}
+{% block title %}AFFICHER MENU{% endblock %}
+{% block body %}
+    <div class="">
+        <h1 class="text-center text-uppercase">affichage menu</h1>
+        <table class="border col-8 my-3 mx-auto">
+            <tbody>
+                <tr>
+                    <td class="border text-center text-uppercase">rang</td>
+                    <td class="border text-uppercase text-center">{{menu.rang}}</td>
+                </tr>
+                <tr>
+                    <td class="border text-center text-uppercase">libelle</td>
+                    <td class="border text-uppercase text-center">{{menu.libelle}}</td>
+                </tr>
+                <tr>
+                    <td class="border text-center text-uppercase">url</td>
+                    <td class="border text-uppercase text-center">{{menu.url}}</td>
+                </tr>
+                <tr>
+                    <td class="border text-center text-uppercase">icone</td>
+                    <td class="border text-uppercase text-center"><i class="{{menu.icone}}"></i></td>
+                </tr>
+                <tr>
+                    <td class="border text-center text-uppercase">role</td>
+                    <td class="border text-uppercase text-center">{{menu.role}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="container">
+            <button class="btn btn-success shadow text-uppercase" onclick="retour()">Retour liste</button>
+            <button class="btn btn-danger shadow text-uppercase" onclick="supprimer()">supprimer</button>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+<script>
+    function retour(){
+        // document.location.href = "/menu";
+        document.location.href = "{{path('app_menu')}}";
+    }
+{# 
+    function supprimer(){
+        const response = confirm('Confirmer la supression');
+        if(response){
+            const id = "{{menu.id}}";
+            const url = "{{path('app_menu_delete', {'id' : menu.id})}}"; 
+            document.location.href = url;  
+        }
+    } #}
+</script>
+{% endblock %}
