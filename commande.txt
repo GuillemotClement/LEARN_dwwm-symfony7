@@ -123,3 +123,56 @@ clement@mbp-de-clement dwwm % symfony console make:auth
  ***************************************************
  AJOUT CRUD SUR USER 
  
+
+
+ ####################################################################
+ CREATION MENU
+
+ clement@MacBook-Pro-de-Clement dwwm % symfony console doctrine:migrations:migrate
+
+ WARNING! You are about to execute a migration in database "dwwm_symfony" that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
+ > 
+
+[notice] Migrating up to DoctrineMigrations\Version20240220080910
+[notice] finished in 17.7ms, used 22M memory, 1 migrations executed, 1 sql queries
+                                                                                                                        
+ [OK] Successfully migrated to version: DoctrineMigrations\Version20240220080910                                        
+                                                                                                                        
+clement@MacBook-Pro-de-Clement dwwm % symfony console make:entity
+
+ Class name of the entity to create or update (e.g. TinyElephant):
+ > Menu
+
+ Your entity already exists! So let's add some new fields!
+
+ New property name (press <return> to stop adding fields):
+ > parent
+
+ Field type (enter ? to see all types) [string]:
+ > ManyToOne
+
+ What class should this entity be related to?:
+ > Menu
+
+ Is the Menu.parent property allowed to be null (nullable)? (yes/no) [yes]:
+ > 
+
+ Do you want to add a new property to Menu so that you can access/update Menu objects from it - e.g. $menu->getMenus()? (yes/no) [yes]:
+ > 
+
+ A new property will also be added to the Menu class so that you can access the related Menu objects from it.
+
+ New field name inside Menu [menus]:
+ > 
+
+ updated: src/Entity/Menu.php
+
+ Add another property? Enter the property name (or press <return> to stop adding fields):
+ > 
+
+
+           
+  Success! 
+           
+
+ Next: When you're ready, create a migration with symfony console make:migration

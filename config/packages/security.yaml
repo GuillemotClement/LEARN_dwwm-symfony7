@@ -41,6 +41,7 @@ security:
         - { path: ^/depot, roles: ROLE_DEPOT }
         - { path: ^/caisse, roles: ROLE_CAISSE }
         - { path: ^/profile, roles: ROLE_USER }
+    access_denied_url: app_accueil
 
 when@test:
     security:
