@@ -1,88 +1,112 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Menu{% endblock %}
-
-{% block body %}
+{% extends 'base.html.twig' %} {% block title %}Menu{% endblock %} {% block body
+%}
 <div class="container">
-    <h1 class="text-center text-uppercase">Liste Menu</h1>
-    <div class="d-flex justify-content-around my-3">
-        <a href="javascript:creer()" class="btn btn-primary shadow text-light text-uppercase"><i class="bi bi-plus-square me-3"></i>Nouveau</a>    
-        <a href="javascript:afficher()" class="btn btn-secondary shadow text-light text-uppercase"><i class="bi bi-eye me-3"></i>Afficher</a>    
-        <a href="javascript:modifier()" class="btn btn-warning shadow text-light text-uppercase"><i class="bi bi-wrench-adjustable-circle me-3"></i>Modifier</a>    
-        <a href="javascript:supprimer()" class="btn btn-danger shadow text-light text-uppercase"><i class="bi bi-plus-square me-3"></i>Supprimer</a>    
-        <a href="javascript:writeExcel()" class="btn btn-success shadow text-light text-uppercase"><i class="bi bi-file-earmark-excel me-3"></i>Excel</a>    
-    </div>
-    <a id="excel" hidden href="#" download >Exporter</a>
-    <table class="container">
-        <thead id="thead_menu">
-            <tr>
-                <th class=""></th>
-                <th class="">Libelle</th>
-                <th class="">url</th>
-                <th class="">icone</th>
-                <th class="">role</th>
-            </tr>
-        </thead>
-        <tbody id="tbody_menu">
-            {{menu|raw}}
-        </tbody>
-        <tfoot id="tfoot_menu">
-            <tr>
-                <td class="center border" colspan="5">Nombre de menus : <span class="fw-bold">{{nbre}}</span></td>
-            </tr>
-        </tfoot>
-    </table>
+  <h1 class="text-center text-uppercase">Liste Menu</h1>
+  <div class="d-flex justify-content-around my-3">
+    <a
+      href="javascript:creer()"
+      class="btn btn-primary shadow text-light text-uppercase"
+      ><i class="bi bi-plus-square me-3"></i>Nouveau</a
+    >
+    <a
+      href="javascript:afficher()"
+      class="btn btn-secondary shadow text-light text-uppercase"
+      ><i class="bi bi-eye me-3"></i>Afficher</a
+    >
+    <a
+      href="javascript:modifier()"
+      class="btn btn-warning shadow text-light text-uppercase"
+      ><i class="bi bi-wrench-adjustable-circle me-3"></i>Modifier</a
+    >
+    <a
+      href="javascript:supprimer()"
+      class="btn btn-danger shadow text-light text-uppercase"
+      ><i class="bi bi-plus-square me-3"></i>Supprimer</a
+    >
+    <a
+      href="javascript:writeExcel()"
+      class="btn btn-success shadow text-light text-uppercase"
+      ><i class="bi bi-file-earmark-excel me-3"></i>Excel</a
+    >
+  </div>
+  <a id="excel" hidden href="#" download>Exporter</a>
+  <table class="container">
+    <thead id="thead_menu">
+      <tr>
+        <th class=""></th>
+        <th class="">Libelle</th>
+        <th class="">url</th>
+        <th class="">icone</th>
+        <th class="">role</th>
+      </tr>
+    </thead>
+    <tbody id="tbody_menu">
+      {{
+        menu | raw
+      }}
+    </tbody>
+    <tfoot id="tfoot_menu">
+      <tr>
+        <td class="center border" colspan="5">
+          Nombre de menus : <span class="fw-bold">{{ nbre }}</span>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
 </div>
 
+{% endblock %} {% block script %}
+<script>
+  let url_edit = "{{path('app_menu_edit', {'id':'id'})}}";
+  function modifier() {
+    const id = getIdChecked("check");
+    if (id == 0) {
+      alert("Saisir une ligne à modifier");
+      return;
+    }
+    const url = url_edit.replace("id", id);
+    document.location.href = url;
+  }
+
+  function creer() {
+    const url = url_edit.replace("id", 0);
+    document.location.href = url;
+  }
+
+  let url_show = "{{path('app_menu_show', {'id' : 'id'})}}";
+  function afficher() {
+    const id = getIdChecked("check");
+    if (id == 0) {
+      alert("Selectionner une ligne");
+    }
+    const url = url_show.replace("id", id);
+    document.location.href = url;
+  }
+
+  let url_menu = "{{path('app_menu')}}";
+  let url_delete = "{{path('app_menu_delete', {'id':'menu_id'})}}"; //écrit menu/delete/menu_id
+  function supprimer() {
+    const id = getIdChecked("check");
+    if (!id) {
+      alert("Selectionner une ligne");
+      return;
+    }
+    const confirmation = confirm("Etes vous sûr de supprimer ce menu");
+    if (confirmation) {
+      const url = url_delete.replace("menu_id", id);
+      let xhr = new XMLHttpRequest();
+      xhr.open("POST", url);
+      xhr.send();
+      xhr.onload = () => {
+        let response = xhr.responseText;
+        response = JSON.parse(response);
+        alert(response["message"]);
+        if (response["ok"] == 1) {
+          document.location.href = url_menu;
+        }
+        alert(response);
+      };
+    }
+  }
+</script>
 {% endblock %}
-{% block script %}
-    <script>
-
-    let url_edit = "{{path('app_menu_edit', {'id':'id'})}}";
-    function modifier(){
-        const id = getIdChecked('check');
-        if(id == 0){
-            alert("Saisir une ligne à modifier");
-            return;
-        }
-        const url = url_edit.replace('id', id);
-        document.location.href = url;
-    }
-
-    function creer(){
-        const url = url_edit.replace('id', 0);
-        document.location.href = url;
-    }
-
-    let url_show = "{{path('app_menu_show', {'id' : 'id'})}}";
-    function afficher(){
-        const id = getIdChecked('check');
-        if(id == 0){
-            alert('Selectionner une ligne');
-        }
-        const url = url_show.replace('id', id);
-        document.location.href = url;
-    }
-    
-
-
-
-
-
-    let url_delete
-    {# const url_delete = "{{path('app_menu_)}}""/client/delete/id";
-    function supprimer(){
-        const id = getIdChecked('check');
-        if(id == 0){
-            alert('Erreur, aucune ligne sélectionnée');
-        }
-        const response = confirm("Confirmer la suppression");
-        if(response){
-            const url = url_delete.replace('id', id);
-            document.location.href = url;
-        }
-            
-    } #}
-    </script>
-{% endblock %}
-

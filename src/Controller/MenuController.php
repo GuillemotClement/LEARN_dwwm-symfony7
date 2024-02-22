@@ -14,6 +14,33 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MenuController extends AbstractController
 {
+
+    #[Route('/menu/delete/{id}', name: 'app_menu_delete')]
+    public function delete(EntityManagerInterface $em, $id)
+    {
+        $menu = $em->getRepository(Menu::class)->find($id);
+        $libelle = $menu->getLibelle();
+        $enfants = $menu->getMenus();
+        $nbreEnfant = count($enfants);
+        $ok = 1; //true
+        if ($nbreEnfant) { //if $nbreEnfant != 0
+            $message = "Impossible de supprimer $libelle car il contient des sous-menu";
+            $ok = 0;
+        } else {
+            $em->remove($menu); //suppression de l'objet menu
+            $em->flush(); //suppression dans la table menu
+            $message = "Le menu $libelle est bien supprimée dans la base de données";
+            $ok = 1;
+        }
+        $responses = [
+            'ok' => $ok,
+            'message' => $message,
+        ];
+        $responses_json = json_encode($responses);
+        echo $responses_json;
+        exit;
+    }
+
     #[Route('/menu/show/{id}', name: 'app_menu_show')]
     public function show($id, EntityManagerInterface $em, Request $request)
     {
