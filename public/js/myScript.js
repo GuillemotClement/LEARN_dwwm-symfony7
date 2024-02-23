@@ -1,3 +1,9 @@
+function touche(event) {
+  if (event.keyCode == 13) {
+    chercher();
+  }
+}
+
 function previewImage(event, id_image) {
   const image = event.target.files[0];
   if (image) {

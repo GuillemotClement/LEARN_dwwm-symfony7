@@ -25,7 +25,7 @@
             </tr>
         </thead>
         <tbody id="tbody_client">
-            {% for client in clients %}
+            {# {% for client in clients %}
             <tr>
                 <td class="border"><input type="checkbox" id="{{client.id}}" value="{{client.id}}" name="check" onclick="onlyOne(this)"></td>
                 <td class="border">{{client.id}}</td>
@@ -33,11 +33,11 @@
                 <td class="border">{{client.nomClient}}</td>
                 <td class="border">{{client.adresseClient}}</td>
             </tr>
-            {% endfor %}
+            {% endfor %} #}
         </tbody>
         <tfoot id="tfoot_client">
             <tr>
-                <td class="center border" colspan="5">Nombre de clients : <span class="fw-bold">{{nbre}}</span></td>
+                <td class="center border" colspan="5" id="td_nbre">Nombre de clients : <span class="fw-bold">{{nbre}}</span></td>
             </tr>
         </tfoot>
     </table>
@@ -46,6 +46,37 @@
 {% endblock %}
 {% block script %}
     <script>
+        const url_search = "{{path('app_client_search')}}";
+        chercher();
+        function chercher(){
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', url_search);
+            let data = new FormData();
+            data.append('mot', mot.value);
+            xhr.send(data);
+            xhr.onload =()=>{
+                let response = xhr.responseText;
+                response = JSON.parse(response);
+                const clients = response['rows'];
+                const nbre = response['nbre'];
+                const html = clients.map((client)=>{
+                    return `
+                        <tr>
+                            <td class="border"><input type="checkbox" id="${client.id}" value="${client.id}" name="check" onclick="onlyOne(this)"></td>
+                            <td class="border">${client.id}</td>
+                            <td class="border">${client.numClient}</td>
+                            <td class="border">${client.nomClient}</td>
+                            <td class="border">${client.adresseClient}</td>
+                        </tr>
+                    `
+                }).join('');
+                tbody_client.innerHTML = html;
+                td_nbre.innerHTML = `Nombre client ${nbre}`;
+
+            }
+        }
+
+
         const url_edit = "/client/edit/id";
         const url_delete = "/client/delete/id";
         {# const url_show = "/client/show/id"; #}
